@@ -1,7 +1,7 @@
 package com.lancarm.javaoop.model;
 
 public class StrutturaAlberghiera {
-    private String insegna,categoria,indirizzo,municipio,tipologia;
+    private String insegna, categoria, indirizzo, municipio, tipologia;
     private int camere;
 
     public StrutturaAlberghiera(String insegna, String categoria, String indirizzo, String municipio, String tipologia, int camere) {
