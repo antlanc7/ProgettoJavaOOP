@@ -4,14 +4,17 @@ package com.lancarm.javaoop.model;
  * Classe che modella il singolo record del dataset csv
  */
 public class StrutturaAlberghiera {
-    /**
-     * Gli attributi corrispondono ai campi del file csv
-     */
     private String insegna, categoria, indirizzo, municipio, tipologia;
     private int camere;
 
     /**
      * Costruttore della classe
+     * @param insegna Primo campo del file csv
+     * @param categoria Secondo campo del file csv
+     * @param indirizzo Terzo campo del file csv
+     * @param municipio Quarto campo del file csv
+     * @param tipologia Quinto campo del file csv
+     * @param camere Sesto campo del file csv
      */
     public StrutturaAlberghiera(String insegna, String categoria, String indirizzo, String municipio, String tipologia, int camere) {
         this.insegna = insegna;
@@ -46,6 +49,10 @@ public class StrutturaAlberghiera {
         return camere;
     }
 
+    /**
+     * Metodo toString per la stampa dell'oggetto
+     * @return Restituisce una stringa contenente il valore dei vari campi
+     */
     @Override
     public String toString() {
         return "StrutturaAlberghiera{" +
