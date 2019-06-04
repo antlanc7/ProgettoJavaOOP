@@ -1,5 +1,8 @@
 package com.lancarm.javaoop.model;
 
+/**
+ * Classe che modella il singolo record del dataset csv
+ */
 public class StrutturaAlberghiera {
     private String insegna, categoria, indirizzo, municipio, tipologia;
     private int camere;
