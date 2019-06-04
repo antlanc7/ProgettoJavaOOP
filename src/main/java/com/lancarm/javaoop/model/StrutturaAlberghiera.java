@@ -4,9 +4,15 @@ package com.lancarm.javaoop.model;
  * Classe che modella il singolo record del dataset csv
  */
 public class StrutturaAlberghiera {
+    /**
+     * Gli attributi corrispondono ai campi del file csv
+     */
     private String insegna, categoria, indirizzo, municipio, tipologia;
     private int camere;
 
+    /**
+     * Costruttore della classe
+     */
     public StrutturaAlberghiera(String insegna, String categoria, String indirizzo, String municipio, String tipologia, int camere) {
         this.insegna = insegna;
         this.categoria = categoria;
