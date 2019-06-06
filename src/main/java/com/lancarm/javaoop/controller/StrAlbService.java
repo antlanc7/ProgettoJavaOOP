@@ -8,6 +8,8 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +20,24 @@ public class StrAlbService {
     private List<StrutturaAlberghiera> strutture = new ArrayList<>();
 
     public StrAlbService() {
-        String link = "https://www.dati.gov.it/api/3/action/package_show?id=310fc617-37a6-4ad2-bcab-25bf69512693";  // URL fornitoci
-
+        String serialFileName = "dati.ser";
+        if (Files.exists(Paths.get(serialFileName))){
+            caricaSeriale(serialFileName);
+        }
+        else {
+            try {
+                parsing("https://www.dati.gov.it/api/3/action/package_show?id=310fc617-37a6-4ad2-bcab-25bf69512693"); // URL fornitoci
+                salvaSeriale(serialFileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        for (StrutturaAlberghiera s : strutture){
+            System.out.println(s);
+        }
     }
-    private void parsing (String link) throws IOException {
+
+    private void parsing(String link) throws IOException {
         // Inizializzo i buffer
         BufferedReader br = null;   // buffer per il parsing
         try {
@@ -56,7 +72,7 @@ public class StrAlbService {
                 // aggiunge l'oggetto appena creato alla lista
                 strutture.add(nuova);
                 // stampa l'oggetto in console per debug
-                System.out.println(nuova);
+                // System.out.println(nuova);
             }
 
 
@@ -71,24 +87,27 @@ public class StrAlbService {
         }
 
     }
-    private void salvaSeriale(String fileName) throws IOException {
+
+    private void salvaSeriale(String fileName) {
         // buffer per il salvataggio tramite seriale della lista creata
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("dati.ser"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
             //Salvataggio tramite Serial della lista su file per evitare di fare ogni volta il parsing
             oos.writeObject(strutture);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-    private void caricaSeriale(String fileName){
+
+    private void caricaSeriale(String fileName) {
         // buffer per il caricamento tramite seriale della lista creata
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("dati.ser"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
             //caricamento tramite Serial della lista da file per evitare di fare ogni volta il parsing
-            strutture=(List)ois.readObject();//readObject non prende parametri in ingresso perchè legge in fila
-
-
+            Object read = ois.readObject(); //readObject non prende parametri in ingresso perchè legge in fila
+            if (read instanceof List) strutture = (List<StrutturaAlberghiera>) read;
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Classe non trovata");
             e.printStackTrace();
         }
     }
