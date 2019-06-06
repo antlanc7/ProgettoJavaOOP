@@ -117,6 +117,7 @@ public class StrAlbService {
     }
 
     public StrutturaAlberghiera getStrAlb(int i) {//restituiamo la i-esima struttura
-        return strutture.get(i);
+        if (i<strutture.size()) return strutture.get(i);
+        else return new StrutturaAlberghiera();
     }
 }
