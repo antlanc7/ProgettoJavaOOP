@@ -1,9 +1,11 @@
 package com.lancarm.javaoop.model;
 
+import java.io.Serializable;
+
 /**
  * Classe che modella il singolo record del dataset csv
  */
-public class StrutturaAlberghiera {
+public class StrutturaAlberghiera implements Serializable {  //Serializable serve a rendere salvabili su file gli oggetti della classe
     private String insegna, categoria, indirizzo, municipio, tipologia;
     private int camere;
 
