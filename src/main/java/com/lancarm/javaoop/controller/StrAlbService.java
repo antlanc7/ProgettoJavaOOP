@@ -75,8 +75,6 @@ public class StrAlbService {
                 // stampa l'oggetto in console per debug
                 // System.out.println(nuova);
             }
-
-
         } catch (MalformedURLException e) {
             System.err.println("URL Errato");
             e.printStackTrace();
@@ -86,7 +84,6 @@ public class StrAlbService {
             // nel finally si chiudono i buffer eventualmente rimasti aperti
             if (br != null) br.close();
         }
-
     }
 
     private void salvaSeriale(String fileName) {
@@ -114,12 +111,12 @@ public class StrAlbService {
     }
 
     //TODO fare metodi per accedere ai dati parsati e poi fare la classe controller
-    //metodo per retituire la lista con tuttti i dati
+    //metodo per retituire la lista con tutti i dati
     public List getAllData() {
         return strutture;
     }
 
-    public StrutturaAlberghiera getStrAlb(int i) {//restituiamo la i esima struttura
+    public StrutturaAlberghiera getStrAlb(int i) {//restituiamo la i-esima struttura
         return strutture.get(i);
     }
 }
