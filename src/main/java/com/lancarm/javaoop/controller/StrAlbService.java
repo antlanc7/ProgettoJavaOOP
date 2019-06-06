@@ -25,9 +25,8 @@ public class StrAlbService {
         if (Files.exists(Paths.get(serialFileName))) {
             caricaSeriale(serialFileName);
         } else {
-            String url="https://www.dati.gov.it/api/3/action/package_show?id=310fc617-37a6-4ad2-bcab-25bf69512693"; // URL fornitoci
+            String url = "https://www.dati.gov.it/api/3/action/package_show?id=310fc617-37a6-4ad2-bcab-25bf69512693"; // URL fornitoci
             try {
-
                 parsing(url);
                 salvaSeriale(serialFileName);
             } catch (IOException e) {
@@ -94,7 +93,6 @@ public class StrAlbService {
         // salvataggio tramite Serial della lista su file per evitare di fare ogni volta il parsing
         // buffer per il salvataggio tramite seriale della lista creata
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
-
             oos.writeObject(strutture.toArray(new StrutturaAlberghiera[0]));    // la lista viene salvata come array per evitare successivi problemi di casting in lettura
         } catch (IOException e) {
             e.printStackTrace();
