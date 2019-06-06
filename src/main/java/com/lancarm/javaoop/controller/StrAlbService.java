@@ -18,11 +18,14 @@ public class StrAlbService {
     private List<StrutturaAlberghiera> strutture = new ArrayList<>();
 
     public StrAlbService() {
+        String link = "https://www.dati.gov.it/api/3/action/package_show?id=310fc617-37a6-4ad2-bcab-25bf69512693";  // URL fornitoci
+
+    }
+    private void parsing (String link){
         // Inizializzo i buffer
         BufferedReader br = null;   // buffer per il parsing
-        ObjectOutputStream oos = null;  // buffer per il salvataggio tramite seriale della lista creata
         try {
-            String link = "https://www.dati.gov.it/api/3/action/package_show?id=310fc617-37a6-4ad2-bcab-25bf69512693";  // URL fornitoci
+
             URLConnection urlConnection = new URL(link).openConnection();   // apro la connessione all'URL
             urlConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0"); // aggiungo alla connessione l'user-agent dato che il protocollo è httpS
             br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())); // apro il buffer di lettura del json ottenuto dall'URL
@@ -55,9 +58,7 @@ public class StrAlbService {
                 // stampa l'oggetto in console per debug
                 System.out.println(nuova);
             }
-            //Salvataggio tramite Serial della lista su file per evitare di fare ogni volta il parsing
-            oos = new ObjectOutputStream(new FileOutputStream("dati.ser"));
-            oos.writeObject(strutture);
+
 
         } catch (MalformedURLException e) {
             System.err.println("URL Errato");
@@ -67,6 +68,21 @@ public class StrAlbService {
         } finally {
             // nel finally si chiudono i buffer eventualmente rimasti aperti
             if (br != null) br.close();
+            if (oos != null) oos.close();
+        }
+
+    }
+    private void salvaSeriale(String fileName) throws IOException {
+        ObjectOutputStream oos = null;  // buffer per il salvataggio tramite seriale della lista creata
+        try {
+            //Salvataggio tramite Serial della lista su file per evitare di fare ogni volta il parsing
+            oos = new ObjectOutputStream(new FileOutputStream("dati.ser"));
+            oos.writeObject(strutture);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            // nel finally si chiudono i buffer eventualmente rimasti aperti
             if (oos != null) oos.close();
         }
     }
