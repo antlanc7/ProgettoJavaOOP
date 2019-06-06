@@ -114,4 +114,12 @@ public class StrAlbService {
     }
 
     //TODO fare metodi per accedere ai dati parsati e poi fare la classe controller
+    //metodo per retituire la lista con tuttti i dati
+    public List getAllData() {
+        return strutture;
+    }
+
+    public StrutturaAlberghiera getStrAlb(int i) {//restituiamo la i esima struttura
+        return strutture.get(i);
+    }
 }
