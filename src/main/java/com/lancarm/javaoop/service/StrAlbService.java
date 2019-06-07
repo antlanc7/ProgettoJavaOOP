@@ -24,18 +24,23 @@ public class StrAlbService {
         String serialFileName = "dati.ser";
         if (Files.exists(Paths.get(serialFileName))) {
             caricaSeriale(serialFileName);
+            System.out.println("Dataset ricaricato da disco");
         } else {
             String url = "https://www.dati.gov.it/api/3/action/package_show?id=310fc617-37a6-4ad2-bcab-25bf69512693"; // URL fornitoci
             try {
                 parsing(url);
+                System.out.println("Dataset parsato da file csv da remoto");
                 salvaSeriale(serialFileName);
+                System.out.println("Dataset salvato su disco locale");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        /* Stampa la lista generata per debug
         for (StrutturaAlberghiera s : strutture) {
             System.out.println(s);
         }
+        */
     }
 
     private void parsing(String link) throws IOException {
@@ -49,7 +54,7 @@ public class StrAlbService {
             // Dato che il JSON è scritto in un'unica riga mi basta una sola lettura
             String json = br.readLine();    // leggo dal buffer il json e lo salvo come stringa
             br.close();     // chiudo il buffer
-            System.out.println(json);   // stampo in console il json letto per debug
+            // System.out.println(json);   // stampo in console il json letto per debug
             Map map = new BasicJsonParser().parseMap(json); // passo la stringa del json al parser di Spring che mi restituisce la mappa chiave-valore associata
             // navigo nella mappa fino all'URL del file csv
             Map result = (Map) map.get("result");   // il metodo get della classe Map mi restituisce un generico Object -> Devo fare il casting
@@ -60,7 +65,7 @@ public class StrAlbService {
                 Map mr = (Map) r;
                 if (mr.get("format").equals("csv")) linkcsv = (String) mr.get("url");
             }
-            System.out.println(linkcsv);    // stampo in console l'URL per debug
+            // System.out.println(linkcsv);    // stampo in console l'URL per debug
             URL csvurl = new URL(linkcsv);  // apro la connessione all'URL
             br = new BufferedReader(new InputStreamReader(csvurl.openStream()));    // apro il buffer di lettura
             br.readLine();  // salto la prima riga (header) leggendola "a vuoto"
