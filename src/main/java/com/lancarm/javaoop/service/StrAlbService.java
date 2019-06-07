@@ -68,8 +68,8 @@ public class StrAlbService {
             while ((line = br.readLine()) != null) {    // leggo il file riga per riga fino alla fine
                 // trim elimina i caratteri non visibili, split divide la riga in corrispondenza del separatore
                 String[] csvLineSplitted = line.trim().split(";");
-                // vado a estrarre i singoli valori dalla riga effettuando eventuali conversioni
-                String insegna=csvLineSplitted[0].trim().replaceAll("\"","");
+                // vado a estrarre i valori dei singoli campi dalla riga effettuando eventuali conversioni
+                String insegna=csvLineSplitted[0].trim().replaceAll("\"","").toUpperCase();
                 String categoria=csvLineSplitted[1].trim();
                 String indirizzo=csvLineSplitted[2].trim();
                 String municipio=csvLineSplitted[3].trim().split(" ")[1];
