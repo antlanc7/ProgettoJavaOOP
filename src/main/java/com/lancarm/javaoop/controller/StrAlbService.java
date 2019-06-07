@@ -67,9 +67,16 @@ public class StrAlbService {
             String line;
             while ((line = br.readLine()) != null) {    // leggo il file riga per riga fino alla fine
                 // trim elimina i caratteri non visibili, split divide la riga in corrispondenza del separatore
-                String[] values = line.trim().split(";");
-                // creo l'oggetto StrutturaAlberghiera sulla base dei valori parsati dal csv
-                StrutturaAlberghiera nuova = new StrutturaAlberghiera(values[0], values[1], values[2], values[3], values[4], Integer.parseInt(values[5]));
+                String[] csvLineSplitted = line.trim().split(";");
+                // vado a estrarre i singoli valori dalla riga effettuando eventuali conversioni
+                String insegna=csvLineSplitted[0].trim().replaceAll("\"","");
+                String categoria=csvLineSplitted[1].trim();
+                String indirizzo=csvLineSplitted[2].trim();
+                String municipio=csvLineSplitted[3].trim().split(" ")[1];
+                String tipologia=csvLineSplitted[4].trim();
+                int camere=Integer.parseInt(csvLineSplitted[5].trim());
+                // creo l'oggetto StrutturaAlberghiera sulla base dei valori parsati
+                StrutturaAlberghiera nuova = new StrutturaAlberghiera(insegna,categoria,indirizzo,municipio,tipologia,camere);
                 // aggiunge l'oggetto appena creato alla lista
                 strutture.add(nuova);
                 // stampa l'oggetto in console per debug
