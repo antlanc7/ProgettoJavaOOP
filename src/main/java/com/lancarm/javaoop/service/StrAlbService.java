@@ -1,4 +1,4 @@
-package com.lancarm.javaoop.controller;
+package com.lancarm.javaoop.service;
 
 import com.lancarm.javaoop.model.StrutturaAlberghiera;
 import org.springframework.boot.json.BasicJsonParser;
