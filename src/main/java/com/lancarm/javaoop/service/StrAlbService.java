@@ -5,20 +5,19 @@ import org.springframework.boot.json.BasicJsonParser;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class StrAlbService {
 
     private List<StrutturaAlberghiera> strutture = new ArrayList<>();
+    private List<Map> metadata;
 
     public StrAlbService() {
         String serialFileName = "dati.ser";
@@ -35,6 +34,20 @@ public class StrAlbService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        Field[] fields=StrutturaAlberghiera.class.getDeclaredFields();//estrae gli attributi della classe struttura alberghiera
+
+        metadata=new ArrayList<>();
+
+        for ( Field f: fields){
+            Map<String,String>map=new HashMap<>();
+            //andiamo ad inserire le coppie chiave valore
+            map.put("alias",f.getName());
+            map.put("sourceField",f.getName().toUpperCase());//nome del campo in csv
+            //touppercase serve per convertire il nome in maiuscolo
+            map.put("type",f.getType().getSimpleName());
+            metadata.add(map);
         }
         /* Stampa la lista generata per debug
         for (StrutturaAlberghiera s : strutture) {
@@ -131,5 +144,9 @@ public class StrAlbService {
     public StrutturaAlberghiera getStrAlb(int i) {//restituiamo la i-esima struttura
         if (i<strutture.size()) return strutture.get(i);
         else return new StrutturaAlberghiera();
+    }
+
+    public List getMetadata(){
+        return metadata;
     }
 }
