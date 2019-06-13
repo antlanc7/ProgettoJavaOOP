@@ -27,8 +27,10 @@ public class StrAlbController {
 
     //metodi per la comunicazione con il client
     @GetMapping("/data")
-    public List getAllData() {
-        return service.getAllData();
+    public List getAllData(@RequestParam(value = "field", required = false, defaultValue = "") String fieldName) {
+        if (fieldName.equals("")) {
+            return service.getAllData();
+        } else return service.getFieldValues(fieldName);
     }
 
     @GetMapping("/data/{id}")
@@ -45,8 +47,7 @@ public class StrAlbController {
     public List getStats(@RequestParam(value = "field", required = false, defaultValue = "") String fieldName) {
         if (fieldName.equals("")) {
             return service.getStats();
-        }
-        else{
+        } else {
             List<Map> list = new ArrayList<>();
             list.add(service.getStats(fieldName));
             return list;

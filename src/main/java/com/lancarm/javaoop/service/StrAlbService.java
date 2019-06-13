@@ -167,7 +167,7 @@ public class StrAlbService {
         return list;
     }
 
-    private List getFieldValues(String fieldName) {
+    public List getFieldValues(String fieldName) {
         List<Object> values = new ArrayList<>();
         try {
             //serve per scorrere tutte le strutture ed estrarre i valori del campo fieldName
