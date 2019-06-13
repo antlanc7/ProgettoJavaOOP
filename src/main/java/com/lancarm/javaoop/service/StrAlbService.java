@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -36,17 +38,17 @@ public class StrAlbService {
             }
         }
 
-        Field[] fields=StrutturaAlberghiera.class.getDeclaredFields();//estrae gli attributi della classe struttura alberghiera
+        Field[] fields = StrutturaAlberghiera.class.getDeclaredFields();//estrae gli attributi della classe struttura alberghiera
 
-        metadata=new ArrayList<>();
+        metadata = new ArrayList<>();
 
-        for ( Field f: fields){
-            Map<String,String>map=new HashMap<>();
+        for (Field f : fields) {
+            Map<String, String> map = new HashMap<>();
             //andiamo ad inserire le coppie chiave valore
-            map.put("alias",f.getName());
-            map.put("sourceField",f.getName().toUpperCase());//nome del campo in csv
+            map.put("alias", f.getName());
+            map.put("sourceField", f.getName().toUpperCase());//nome del campo in csv
             //touppercase serve per convertire il nome in maiuscolo
-            map.put("type",f.getType().getSimpleName());
+            map.put("type", f.getType().getSimpleName());
             metadata.add(map);
         }
         /* Stampa la lista generata per debug
@@ -87,14 +89,14 @@ public class StrAlbService {
                 // trim elimina i caratteri non visibili, split divide la riga in corrispondenza del separatore
                 String[] csvLineSplitted = line.trim().split(";");
                 // vado a estrarre i valori dei singoli campi dalla riga effettuando eventuali conversioni
-                String insegna=csvLineSplitted[0].trim().replaceAll("\"","").toUpperCase();
-                String categoria=csvLineSplitted[1].trim();
-                String indirizzo=csvLineSplitted[2].trim();
-                String municipio=csvLineSplitted[3].trim().split(" ")[1];
-                String tipologia=csvLineSplitted[4].trim();
-                int camere=Integer.parseInt(csvLineSplitted[5].trim());
+                String insegna = csvLineSplitted[0].trim().replaceAll("\"", "").toUpperCase();
+                String categoria = csvLineSplitted[1].trim();
+                String indirizzo = csvLineSplitted[2].trim();
+                String municipio = csvLineSplitted[3].trim().split(" ")[1];
+                String tipologia = csvLineSplitted[4].trim();
+                int camere = Integer.parseInt(csvLineSplitted[5].trim());
                 // creo l'oggetto StrutturaAlberghiera sulla base dei valori parsati
-                StrutturaAlberghiera nuova = new StrutturaAlberghiera(insegna,categoria,indirizzo,municipio,tipologia,camere);
+                StrutturaAlberghiera nuova = new StrutturaAlberghiera(insegna, categoria, indirizzo, municipio, tipologia, camere);
                 // aggiunge l'oggetto appena creato alla lista
                 strutture.add(nuova);
                 // stampa l'oggetto in console per debug
@@ -142,11 +144,41 @@ public class StrAlbService {
     }
 
     public StrutturaAlberghiera getStrAlb(int i) {//restituiamo la i-esima struttura
-        if (i<strutture.size()) return strutture.get(i);
+        if (i < strutture.size()) return strutture.get(i);
         else return new StrutturaAlberghiera();
     }
 
-    public List getMetadata(){
+    public List getMetadata() {
         return metadata;
+    }
+
+    public Map getStats(String fieldName) {
+        return Stats.getAllStats(fieldName, getFieldValues(fieldName));
+    }
+
+    public List<Map> getStats(){
+        Field[] fields=StrutturaAlberghiera.class.getDeclaredFields();// questo ci da l'elenco di tutti gli attributi della classe
+        List<Map> list=new ArrayList<>();
+        for( Field f:fields)
+        {
+            String fieldName=f.getName();//f è l'oggetto di tipo fieldsName estrae il nome del campo corrente
+            list.add(getStats(fieldName));//va ad aggiungere alla lista  la mappa che contiene le statistiche del campo fieldName
+        }
+        return list;
+    }
+
+    private List getFieldValues(String fieldName) {
+        List<Object> values = new ArrayList<>();
+        try {
+            //serve per scorrere tutte le strutture ed estrarre i valori del campo fieldName
+            for (StrutturaAlberghiera s : strutture) {
+                Method getter = StrutturaAlberghiera.class.getMethod("get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1));
+                Object value = getter.invoke(s);
+                values.add(value);
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return values;
     }
 }
