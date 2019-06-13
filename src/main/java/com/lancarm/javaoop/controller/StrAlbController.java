@@ -5,6 +5,7 @@ import com.lancarm.javaoop.service.StrAlbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Field;
@@ -26,18 +27,30 @@ public class StrAlbController {
 
     //metodi per la comunicazione con il client
     @GetMapping("/data")
-    public List getAllData (){
+    public List getAllData() {
         return service.getAllData();
     }
 
     @GetMapping("/data/{id}")
-    public StrutturaAlberghiera getStrAlbById(@PathVariable int id){
+    public StrutturaAlberghiera getStrAlbById(@PathVariable int id) {
         return service.getStrAlb(id);
     }
 
     @GetMapping("/metadata")
-    public List getMetadata(){
+    public List getMetadata() {
         return service.getMetadata();
+    }
+
+    @GetMapping("/stats")
+    public List getStats(@RequestParam(value = "field", required = false, defaultValue = "") String fieldName) {
+        if (fieldName.equals("")) {
+            return service.getStats();
+        }
+        else{
+            List<Map> list = new ArrayList<>();
+            list.add(service.getStats(fieldName));
+            return list;
+        }
 
     }
 
