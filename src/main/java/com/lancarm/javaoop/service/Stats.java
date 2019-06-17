@@ -6,6 +6,11 @@ import java.util.Map;
 
 public abstract class Stats {
 
+    public static double round(double x, int n){
+        double factor = Math.pow(10,n);
+        return Math.round(x*factor)/factor;
+    }
+
     public static int count(List list) {
         return list.size();
     }
@@ -19,7 +24,7 @@ public abstract class Stats {
     }
 
     public static double avg(List<Number> list) {
-        return sum(list) / count(list);
+        return round(sum(list) / count(list),2);
     }
 
     public static double max(List<Number> list) {
@@ -46,7 +51,7 @@ public abstract class Stats {
         for (Number n : list) {
             var += Math.pow(n.doubleValue() - avg, 2);
         }
-        return Math.sqrt(var);
+        return round(Math.sqrt(var),2);
     }
 
     public static Map<Object, Integer> uniqueElements(List list) {
@@ -61,6 +66,7 @@ public abstract class Stats {
         return map;
     }
 
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> getAllStats(String fieldName, List list) {
         Map<String, Object> map = new HashMap<>();
         map.put("field", fieldName);
