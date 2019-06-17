@@ -3,10 +3,8 @@ package com.lancarm.javaoop.controller;
 import com.lancarm.javaoop.model.StrutturaAlberghiera;
 import com.lancarm.javaoop.service.StrAlbService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.boot.json.BasicJsonParser;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -27,10 +25,8 @@ public class StrAlbController {
 
     //metodi per la comunicazione con il client
     @GetMapping("/data")
-    public List getAllData(@RequestParam(value = "field", required = false, defaultValue = "") String fieldName) {
-        if (fieldName.equals("")) {
-            return service.getAllData();
-        } else return service.getFieldValues(fieldName);
+    public List getAllData() {
+        return service.getAllData();
     }
 
     @GetMapping("/data/{id}")
@@ -52,7 +48,54 @@ public class StrAlbController {
             list.add(service.getStats(fieldName));
             return list;
         }
+    }
 
+    private static Map<String,Object> parseFilter(String body){
+        Map<String,Object> parsedBody = new BasicJsonParser().parseMap(body);
+        String fieldName = parsedBody.keySet().toArray(new String[0])[0];
+        Object rawValue = parsedBody.get(fieldName);
+        Object refValue;
+        String operator;
+        if (rawValue instanceof Map) {
+            Map filter = (Map) rawValue;
+            //System.out.println(filter);
+            operator = (String) filter.keySet().toArray()[0];
+            refValue = filter.get(operator);
+        }
+        else {
+            operator = "$eq";
+            refValue = rawValue;
+        }
+        Map<String,Object> filter = new HashMap<>();
+        filter.put("operator",operator);
+        filter.put("field",fieldName);
+        filter.put("ref",refValue);
+        return filter;
+    }
+
+    @PostMapping("/data")
+    public List getFilteredData(@RequestBody String body){
+        Map<String,Object> filter = parseFilter(body);
+        String fieldName = (String) filter.get("field");
+        String operator = (String) filter.get("operator");
+        Object refValue = filter.get("ref");
+        return service.getFilteredData(fieldName, operator, refValue);
+    }
+
+    @PostMapping("/stats")
+    public List<Map> getFilteredStats(@RequestParam("field") String fieldName, @RequestBody String body) {
+        Map<String,Object> filter = parseFilter(body);
+        String fieldToFilter = (String) filter.get("field");
+        String operator = (String) filter.get("operator");
+        Object refValue = filter.get("ref");
+        if (fieldName.equals("")){
+            return service.getFilteredStats(fieldToFilter,operator,refValue);
+        }
+        else {
+            List<Map> list = new ArrayList<>();
+            list.add(service.getFilteredStats(fieldName,fieldToFilter,operator,refValue));
+            return list;
+        }
     }
 
 }
