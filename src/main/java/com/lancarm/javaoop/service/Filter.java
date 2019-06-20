@@ -7,10 +7,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Classe astratta che implementa i metodi per filtrare i campi
+ */
 public abstract class Filter {
 
+    //Lista degli operatori di confronto implementati
     private static final List<String> operators = Arrays.asList("$eq", "$not", "$in", "$nin", "$gt", "$gte", "$lt", "$lte", "$bt");
 
+    /**
+     * Metodo che effettua il confronto il valore value e il riferimento ref, in base all'operatore passato
+     * @param value valore da controllare
+     * @param operator operatore di confronto
+     * @param ref valore di riferimento
+     * @return boolean
+     */
     public static boolean check(Object value, String operator, Object ref) {
         if (operators.contains(operator)) {  //se l'operatore è valido
             if (value instanceof Number) {   //se il valore da controllare è numerico
@@ -95,6 +106,13 @@ public abstract class Filter {
     }
 
 
+    /**
+     * Metodo che filtra una la lista dei valori del campo
+     * @param values lista valori da controllae
+     * @param operator operatore di confronto
+     * @param ref valore di riferimento
+     * @return lista di interi contenente gli indici dei valori che soddisfano il filtro
+     */
     public static List<Integer> select(List values, String operator, Object ref) {
         List<Integer> indexes = new ArrayList<>();
         for (int i=0; i<values.size(); i++){
@@ -104,4 +122,10 @@ public abstract class Filter {
         return indexes;
     }
 
+    /**
+     * @return lista degli operatori validi per i filtri
+     */
+    public static List<String> getOperators() {
+        return operators;
+    }
 }
