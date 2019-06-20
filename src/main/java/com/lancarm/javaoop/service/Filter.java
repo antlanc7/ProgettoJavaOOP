@@ -23,12 +23,12 @@ public abstract class Filter {
      * @return boolean
      */
     public static boolean check(Object value, String operator, Object ref) {
-        if (operators.contains(operator)) {  //se l'operatore è valido
+        if (operators.contains(operator)) {  //se l'operatore è valido, cioè è contenuto nella lista degli operatori implementati
             if (value instanceof Number) {   //se il valore da controllare è numerico
                 double numValue = ((Number) value).doubleValue();   //lo converto in double
                 if (ref instanceof Number) {  //se il riferimento è un singolo numero
-                    double numRef = ((Number) ref).doubleValue();
-                    switch (operator) {
+                    double numRef = ((Number) ref).doubleValue(); // lo converto in double
+                    switch (operator) {     //effettua il confronto corrispondente all'operatore
                         case "$eq":
                             return numValue == numRef;      //i break non servono perché tanto c'è il return che esce dal metodo
                         case "$not":
@@ -41,19 +41,19 @@ public abstract class Filter {
                             return numValue < numRef;
                         case "$lte":
                             return numValue <= numRef;
-                        default:
+                        default:    // quando l'operatore non è adeguato per i valori passati
                             String message = "Invalid operator: '" + operator + "' for given operands: '" + value + "' , '" + ref + "'";
-                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message); //serve a restituire un messaggio di errore in formato JSON al client
                     }
                 } else if (ref instanceof List) {  //se il riferimento è una lista
-                    List listRef = ((List) ref);
-                    if (!listRef.isEmpty() && listRef.get(0) instanceof Number) {// se il riferimento è una lista non vuota di numeri
-                        // converto la lista generica in una lista di double
+                    List listRef = ((List) ref); //lo converto in lista generica
+                    if (!listRef.isEmpty() && listRef.get(0) instanceof Number) {// se lista non è vuota e contiene numeri
+                        // le seguenti istruzioni convertono la lista generica in una lista di double
                         List<Double> listRefNum = new ArrayList<>();
                         for (Object elem : listRef) {
                             listRefNum.add(((Number) elem).doubleValue());
-                        }
-                        switch (operator) {
+                        } // fino a qui
+                        switch (operator) { //come sopra vado a effettuare i controlli
                             case "$in":
                                 return listRefNum.contains(numValue);
                             case "$nin":
@@ -66,13 +66,12 @@ public abstract class Filter {
                                 String message = "Invalid operator: '" + operator + "' for given operands: '" + value + "' , '" + ref + "'";
                                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
                         }
-                    } else
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ref object: '" + ref + "'");
-                } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ref object: '" + ref + "'");
-            } else if (value instanceof String) {
-                String strValue = ((String) value);
-                if (ref instanceof String) {
-                    String strRef = ((String) ref);
+                    } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref list is empty or contains invalid elements"); // se la lista è vuota o non contiene numeri
+                } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref object: '" + ref + "' not compatible with value: '"+value+"'");  // se il riferimento non è compatibile con il valore
+            } else if (value instanceof String) {   // se il valore è una stringa
+                String strValue = ((String) value); // lo converto
+                if (ref instanceof String) {        // se il riferimento è una singola stringa
+                    String strRef = ((String) ref); // converto anche lui
                     switch (operator) {
                         case "$eq":
                             return strValue.equals(strRef);      //i break non servono perché tanto c'è il return che esce dal metodo
@@ -99,10 +98,10 @@ public abstract class Filter {
                                 String message = "Invalid operator: '" + operator + "' for given operands: '" + value + "' , '" + ref + "'";
                                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
                         }
-                    } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ref object: '" + ref + "'");
-                } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ref object: '" + ref + "'");
-            } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid value object: '" + value + "'");
-        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid operator: " + operator);
+                    } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref list is empty or contains invalid elements"); // se la lista è vuota o non contiene stringhe
+                } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref object: '" + ref + "' not compatible with value: '"+value+"'");  // se il riferimento non è compatibile con il valore
+            } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid value object: '" + value + "'"); // se il valore da controllare non è valido
+        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid operator: " + operator);  // se l'operatore non è valido
     }
 
 
@@ -116,10 +115,10 @@ public abstract class Filter {
     public static List<Integer> select(List values, String operator, Object ref) {
         List<Integer> indexes = new ArrayList<>();
         for (int i=0; i<values.size(); i++){
-            if (check(values.get(i), operator, ref))
-                indexes.add(i);
+            if (check(values.get(i), operator, ref))        // per ogni elemento della lista, se soddisfa il controllo (check)
+                indexes.add(i);         // aggiungo il suo indice alla lista
         }
-        return indexes;
+        return indexes;         //restituisco la lista degli indici
     }
 
     /**
