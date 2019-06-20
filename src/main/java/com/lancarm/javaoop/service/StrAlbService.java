@@ -217,7 +217,7 @@ public class StrAlbService {
     }
 
     /**
-     * Metodo che estrae dalla lista di oggetti la lista dei valori relativi ad un singolo campo
+     * Metodo che estrae dalla lista di oggetti (dataset) la lista dei valori relativi ad un singolo campo
      *
      * @param fieldName campo del quale estrarre i valori
      * @return lista dei valori del campo richiesto
@@ -249,8 +249,8 @@ public class StrAlbService {
      * @return lista di oggetti che soddisfano il filtro
      */
     public List<StrutturaAlberghiera> getFilteredData(String fieldName, String operator, Object ref) {
-        List<Integer> indexes = Filter.select(getFieldValues(fieldName), operator, ref);
-        List<StrutturaAlberghiera> out = new ArrayList<>();
+        List<Integer> indexes = Filter.select(getFieldValues(fieldName), operator, ref);    //esegue il filtraggio ricavando la lista degli indici degli oggetti
+        List<StrutturaAlberghiera> out = new ArrayList<>(); //costruisce la lista di oggetti a partire da quella degli indici
         for (int i : indexes) {
             out.add(strutture.get(i));
         }
