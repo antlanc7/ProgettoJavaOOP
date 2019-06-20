@@ -1,8 +1,6 @@
 package com.lancarm.javaoop.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -132,12 +130,17 @@ public abstract class Stats {
         map.put("field", fieldName);
         if (!list.isEmpty()) {
             if (list.get(0) instanceof Number) {        // calcola le statistiche numeriche
-                map.put("avg", avg(list));
-                map.put("min", min(list));
-                map.put("max", max(list));
-                map.put("std", std(list));
-                map.put("sum", sum(list));
-                map.put("count", count(list));
+                //converto la lista generica in lista di numeri
+                List<Number> listNum = new ArrayList<>();
+                for (Object elem : list){
+                    listNum.add(((Number) elem));
+                }
+                map.put("avg", avg(listNum));
+                map.put("min", min(listNum));
+                map.put("max", max(listNum));
+                map.put("std", std(listNum));
+                map.put("sum", sum(listNum));
+                map.put("count", count(listNum));
                 return map;
             } else {        // calcola le statistiche non numeriche
                 map.put("uniqueElements", uniqueElements(list));
