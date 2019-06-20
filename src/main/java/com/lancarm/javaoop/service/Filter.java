@@ -17,9 +17,10 @@ public abstract class Filter {
 
     /**
      * Metodo che effettua il confronto il valore value e il riferimento ref, in base all'operatore passato
-     * @param value valore da controllare
+     *
+     * @param value    valore da controllare
      * @param operator operatore di confronto
-     * @param ref valore di riferimento
+     * @param ref      valore di riferimento
      * @return boolean
      */
     public static boolean check(Object value, String operator, Object ref) {
@@ -66,8 +67,10 @@ public abstract class Filter {
                                 String message = "Invalid operator: '" + operator + "' for given operands: '" + value + "' , '" + ref + "'";
                                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
                         }
-                    } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref list is empty or contains invalid elements"); // se la lista è vuota o non contiene numeri
-                } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref object: '" + ref + "' not compatible with value: '"+value+"'");  // se il riferimento non è compatibile con il valore
+                    } else
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref list is empty or contains invalid elements"); // se la lista è vuota o non contiene numeri
+                } else
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref object: '" + ref + "' not compatible with value: '" + value + "'");  // se il riferimento non è compatibile con il valore
             } else if (value instanceof String) {   // se il valore è una stringa
                 String strValue = ((String) value); // lo converto
                 if (ref instanceof String) {        // se il riferimento è una singola stringa
@@ -98,23 +101,28 @@ public abstract class Filter {
                                 String message = "Invalid operator: '" + operator + "' for given operands: '" + value + "' , '" + ref + "'";
                                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
                         }
-                    } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref list is empty or contains invalid elements"); // se la lista è vuota o non contiene stringhe
-                } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref object: '" + ref + "' not compatible with value: '"+value+"'");  // se il riferimento non è compatibile con il valore
-            } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid value object: '" + value + "'"); // se il valore da controllare non è valido
-        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid operator: " + operator);  // se l'operatore non è valido
+                    } else
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref list is empty or contains invalid elements"); // se la lista è vuota o non contiene stringhe
+                } else
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ref object: '" + ref + "' not compatible with value: '" + value + "'");  // se il riferimento non è compatibile con il valore
+            } else
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid value object: '" + value + "'"); // se il valore da controllare non è valido
+        } else
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid operator: " + operator);  // se l'operatore non è valido
     }
 
 
     /**
      * Metodo che filtra una la lista dei valori del campo
-     * @param values lista valori da controllae
+     *
+     * @param values   lista valori da controllare
      * @param operator operatore di confronto
-     * @param ref valore di riferimento
+     * @param ref      valore di riferimento
      * @return lista di interi contenente gli indici dei valori che soddisfano il filtro
      */
     public static List<Integer> select(List values, String operator, Object ref) {
         List<Integer> indexes = new ArrayList<>();
-        for (int i=0; i<values.size(); i++){
+        for (int i = 0; i < values.size(); i++) {
             if (check(values.get(i), operator, ref))        // per ogni elemento della lista, se soddisfa il controllo (check)
                 indexes.add(i);         // aggiungo il suo indice alla lista
         }

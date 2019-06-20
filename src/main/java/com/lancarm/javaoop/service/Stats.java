@@ -13,9 +13,10 @@ public abstract class Stats {
 
     /**
      * Metodo ausiliario per l'arrotondamento dei numeri decimali
+     *
      * @param x numero da arrotondare
      * @param n numero di cifre dopo la virgola desiderate
-     * @return  numero arrotondato a n cifre decimali
+     * @return numero arrotondato a n cifre decimali
      */
     public static double round(double x, int n) {
         double factor = Math.pow(10, n);    //calcola il fattore moltiplicativo per spostare la virgola di n posti
@@ -24,8 +25,9 @@ public abstract class Stats {
 
     /**
      * Metodo che conta gli elementi di una lista
+     *
      * @param list lista di valori da contare
-     * @return  dimensione della lista
+     * @return dimensione della lista
      */
     public static int count(List list) {
         return list.size();     //basta usare il metodo size() delle liste
@@ -33,6 +35,7 @@ public abstract class Stats {
 
     /**
      * Metodo che somma tra loro gli elementi di una lista numerica
+     *
      * @param list lista di numeri da sommare
      * @return somma degli elementi
      */
@@ -46,6 +49,7 @@ public abstract class Stats {
 
     /**
      * Metodo che calcola la media degli elementi di una lista numerica
+     *
      * @param list lista di numeri su cui calcolare la media
      * @return media degli elementi
      */
@@ -55,6 +59,7 @@ public abstract class Stats {
 
     /**
      * Metodo che estrae il valore massimo tra gli elementi di una lista
+     *
      * @param list lista di numeri dai quali trovare il massimo
      * @return valore massimo della lista
      */
@@ -69,6 +74,7 @@ public abstract class Stats {
 
     /**
      * Metodo che estrae il valore minimo tra gli elementi di una lista
+     *
      * @param list lista di numeri dai quali trovare il minimo
      * @return valore minimo della lista
      */
@@ -83,6 +89,7 @@ public abstract class Stats {
 
     /**
      * Metodo che calcola la deviazione standard degli elementi di una lista
+     *
      * @param list lista di numeri dei quali calcolare la dev. std.
      * @return deviazione standard dei valori della lista
      */
@@ -97,6 +104,7 @@ public abstract class Stats {
 
     /**
      * Metodo che conta le occorrenze di ogni elemento all'interno di una lista
+     *
      * @param list lista di valori
      * @return Map che ha come chiavi gli elementi della lista e come relativi valori il numero di occorrenze
      */
@@ -114,8 +122,9 @@ public abstract class Stats {
 
     /**
      * Metodo che utilizzando gli altri della classe, restituisce tutti valori statistici di un certo campo del dataset
+     *
      * @param fieldName nome del campo dal quale si è estratta la lista di valori
-     * @param list lista dei valori del campo (eventualmente  già filtrata)
+     * @param list      lista dei valori del campo (eventualmente  già filtrata)
      * @return Map che ha come chiavi i nomi delle statistiche calcolabili sul campo e associati i rispettivi valori
      */
     public static Map<String, Object> getAllStats(String fieldName, List list) {

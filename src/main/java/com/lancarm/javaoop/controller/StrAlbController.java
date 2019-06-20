@@ -81,7 +81,7 @@ public class StrAlbController {
     }
 
     @PostMapping("/stats")
-    public List<Map> getFilteredStats(@RequestParam(value="field",required = false, defaultValue = "") String fieldName, @RequestBody String body) {
+    public List<Map> getFilteredStats(@RequestParam(value = "field", required = false, defaultValue = "") String fieldName, @RequestBody String body) {
         Map<String, Object> filter = parseFilter(body);
         String fieldToFilter = (String) filter.get("field");
         String operator = (String) filter.get("operator");

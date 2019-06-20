@@ -146,7 +146,7 @@ public class StrAlbService {
 
     public StrutturaAlberghiera getStrAlb(int i) {//restituiamo la i-esima struttura
         if (i < strutture.size()) return strutture.get(i);
-        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Id: '"+i+"' does not exist");
+        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id: '" + i + "' does not exist");
     }
 
     public List getMetadata() {

@@ -11,12 +11,13 @@ public class StrutturaAlberghiera implements Serializable {  //Serializable serv
 
     /**
      * Costruttore della classe
-     * @param insegna Primo campo del file csv
+     *
+     * @param insegna   Primo campo del file csv
      * @param categoria Secondo campo del file csv
      * @param indirizzo Terzo campo del file csv
      * @param municipio Quarto campo del file csv
      * @param tipologia Quinto campo del file csv
-     * @param camere Sesto campo del file csv
+     * @param camere    Sesto campo del file csv
      */
     public StrutturaAlberghiera(String insegna, String categoria, String indirizzo, String municipio, String tipologia, int camere) {
         this.insegna = insegna;
@@ -53,6 +54,7 @@ public class StrutturaAlberghiera implements Serializable {  //Serializable serv
 
     /**
      * Metodo toString per la stampa dell'oggetto
+     *
      * @return Restituisce una stringa contenente il valore dei vari campi
      */
     @Override
