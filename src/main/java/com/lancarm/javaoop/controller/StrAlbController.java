@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.BasicJsonParser;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,8 +49,8 @@ public class StrAlbController {
         }
     }
 
-    private static Map<String,Object> parseFilter(String body){
-        Map<String,Object> parsedBody = new BasicJsonParser().parseMap(body);
+    private static Map<String, Object> parseFilter(String body) {
+        Map<String, Object> parsedBody = new BasicJsonParser().parseMap(body);
         String fieldName = parsedBody.keySet().toArray(new String[0])[0];
         Object rawValue = parsedBody.get(fieldName);
         Object refValue;
@@ -59,23 +58,22 @@ public class StrAlbController {
         if (rawValue instanceof Map) {
             Map filter = (Map) rawValue;
             //System.out.println(filter);
-            operator = (String) filter.keySet().toArray()[0];
+            operator = ((String) filter.keySet().toArray()[0]).toLowerCase();
             refValue = filter.get(operator);
-        }
-        else {
+        } else {
             operator = "$eq";
             refValue = rawValue;
         }
-        Map<String,Object> filter = new HashMap<>();
-        filter.put("operator",operator);
-        filter.put("field",fieldName);
-        filter.put("ref",refValue);
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("operator", operator);
+        filter.put("field", fieldName);
+        filter.put("ref", refValue);
         return filter;
     }
 
     @PostMapping("/data")
-    public List getFilteredData(@RequestBody String body){
-        Map<String,Object> filter = parseFilter(body);
+    public List getFilteredData(@RequestBody String body) {
+        Map<String, Object> filter = parseFilter(body);
         String fieldName = (String) filter.get("field");
         String operator = (String) filter.get("operator");
         Object refValue = filter.get("ref");
@@ -83,17 +81,16 @@ public class StrAlbController {
     }
 
     @PostMapping("/stats")
-    public List<Map> getFilteredStats(@RequestParam("field") String fieldName, @RequestBody String body) {
-        Map<String,Object> filter = parseFilter(body);
+    public List<Map> getFilteredStats(@RequestParam(value="field",required = false, defaultValue = "") String fieldName, @RequestBody String body) {
+        Map<String, Object> filter = parseFilter(body);
         String fieldToFilter = (String) filter.get("field");
         String operator = (String) filter.get("operator");
         Object refValue = filter.get("ref");
-        if (fieldName.equals("")){
-            return service.getFilteredStats(fieldToFilter,operator,refValue);
-        }
-        else {
+        if (fieldName.equals("")) {
+            return service.getFilteredStats(fieldToFilter, operator, refValue);
+        } else {
             List<Map> list = new ArrayList<>();
-            list.add(service.getFilteredStats(fieldName,fieldToFilter,operator,refValue));
+            list.add(service.getFilteredStats(fieldName, fieldToFilter, operator, refValue));
             return list;
         }
     }

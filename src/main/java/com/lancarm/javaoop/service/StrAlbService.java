@@ -157,12 +157,11 @@ public class StrAlbService {
         return Stats.getAllStats(fieldName, getFieldValues(fieldName));
     }
 
-    public List<Map> getStats(){
-        Field[] fields=StrutturaAlberghiera.class.getDeclaredFields();// questo ci da l'elenco di tutti gli attributi della classe
-        List<Map> list=new ArrayList<>();
-        for(Field f:fields)
-        {
-            String fieldName=f.getName();//f è l'oggetto di tipo fieldsName estrae il nome del campo corrente
+    public List<Map> getStats() {
+        Field[] fields = StrutturaAlberghiera.class.getDeclaredFields();// questo ci da l'elenco di tutti gli attributi della classe
+        List<Map> list = new ArrayList<>();
+        for (Field f : fields) {
+            String fieldName = f.getName();//f è l'oggetto di tipo fieldsName estrae il nome del campo corrente
             list.add(getStats(fieldName));//va ad aggiungere alla lista  la mappa che contiene le statistiche del campo fieldName
         }
         return list;
@@ -186,32 +185,31 @@ public class StrAlbService {
         return values;
     }
 
-    public List<StrutturaAlberghiera> getFilteredData(String fieldName, String operator, Object ref){
-        List<Integer> indexes = Filter.select(getFieldValues(fieldName),operator,ref);
-        List<StrutturaAlberghiera> out =new ArrayList<>();
-        for (int i : indexes){
+    public List<StrutturaAlberghiera> getFilteredData(String fieldName, String operator, Object ref) {
+        List<Integer> indexes = Filter.select(getFieldValues(fieldName), operator, ref);
+        List<StrutturaAlberghiera> out = new ArrayList<>();
+        for (int i : indexes) {
             out.add(strutture.get(i));
         }
         return out;
     }
 
     public Map getFilteredStats(String fieldToStats, String fieldToFilter, String operator, Object ref) {
-        List<Integer> indexes = Filter.select(getFieldValues(fieldToFilter),operator,ref);
+        List<Integer> indexes = Filter.select(getFieldValues(fieldToFilter), operator, ref);
         List allValues = getFieldValues(fieldToStats);
         List filteredValues = new ArrayList();
-        for (int i : indexes){
+        for (int i : indexes) {
             filteredValues.add(allValues.get(i));
         }
         return Stats.getAllStats(fieldToStats, filteredValues);
     }
 
-    public List<Map> getFilteredStats(String fieldToFilter, String operator, Object ref){
-        Field[] fields=StrutturaAlberghiera.class.getDeclaredFields();// questo ci da l'elenco di tutti gli attributi della classe
-        List<Map> list=new ArrayList<>();
-        for(Field f:fields)
-        {
-            String fieldName=f.getName();//f è l'oggetto di tipo fieldsName estrae il nome del campo corrente
-            list.add(getFilteredStats(fieldName,fieldToFilter,operator,ref));//va ad aggiungere alla lista  la mappa che contiene le statistiche del campo fieldName filtrato
+    public List<Map> getFilteredStats(String fieldToFilter, String operator, Object ref) {
+        Field[] fields = StrutturaAlberghiera.class.getDeclaredFields();// questo ci da l'elenco di tutti gli attributi della classe
+        List<Map> list = new ArrayList<>();
+        for (Field f : fields) {
+            String fieldName = f.getName();//f è l'oggetto di tipo field, getName estrae il nome del campo corrente
+            list.add(getFilteredStats(fieldName, fieldToFilter, operator, ref));//va ad aggiungere alla lista  la mappa che contiene le statistiche del campo fieldName filtrato
         }
         return list;
     }

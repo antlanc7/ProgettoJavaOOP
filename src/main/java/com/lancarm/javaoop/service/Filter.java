@@ -88,8 +88,7 @@ public abstract class Filter {
                                 String message = "Invalid operator: '" + operator + "' for given operands: '" + value + "' , '" + ref + "'";
                                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
                         }
-                    } else
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ref object: '" + ref + "'");
+                    } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ref object: '" + ref + "'");
                 } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ref object: '" + ref + "'");
             } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid value object: '" + value + "'");
         } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid operator: " + operator);
@@ -98,9 +97,9 @@ public abstract class Filter {
 
     public static List<Integer> select(List values, String operator, Object ref) {
         List<Integer> indexes = new ArrayList<>();
-        for (Object elem : values) {
-            if (check(elem, operator, ref))
-                indexes.add(values.indexOf(elem));
+        for (int i=0; i<values.size(); i++){
+            if (check(values.get(i), operator, ref))
+                indexes.add(i);
         }
         return indexes;
     }
