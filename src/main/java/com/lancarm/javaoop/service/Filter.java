@@ -130,6 +130,8 @@ public abstract class Filter {
     }
 
     /**
+     * Restituisce la lista degli operatori validi
+     *
      * @return lista degli operatori validi per i filtri
      */
     public static List<String> getOperators() {

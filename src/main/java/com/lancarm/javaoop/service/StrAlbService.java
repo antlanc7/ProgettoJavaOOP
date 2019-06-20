@@ -17,14 +17,21 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+
+/**
+ * Classe che carica il dataset e ne gestisce l'accesso
+ */
 @Service
 public class StrAlbService {
 
     private List<StrutturaAlberghiera> strutture = new ArrayList<>();
-    private List<Map> metadata;
+    private List<Map> metadata = new ArrayList<>();
 
+    /**
+     * Costruttore che carica il dataset facendo il parsing del csv da remoto oppure ricaricando un parsing precedente da file seriale cache
+     */
     public StrAlbService() {
-        String serialFileName = "dati.ser";
+        String serialFileName = "dataset.ser";
         if (Files.exists(Paths.get(serialFileName))) {
             caricaSeriale(serialFileName);
             System.out.println("Dataset ricaricato da disco");
@@ -40,9 +47,10 @@ public class StrAlbService {
             }
         }
 
-        Field[] fields = StrutturaAlberghiera.class.getDeclaredFields();//estrae gli attributi della classe struttura alberghiera
 
-        metadata = new ArrayList<>();
+        //La parte seguente del costruttore genera i metadati e li conserva in modo da restituirli istantaneamente al momento della richiesta
+
+        Field[] fields = StrutturaAlberghiera.class.getDeclaredFields();//estrae gli attributi della classe struttura alberghiera
 
         for (Field f : fields) {
             Map<String, String> map = new HashMap<>();
@@ -60,11 +68,16 @@ public class StrAlbService {
         */
     }
 
+    /**
+     * Metodo che esegue il parsing dei dati dal csv
+     *
+     * @param link url del json contenente il link del file csv
+     * @throws IOException in caso di errori nella lettura dai buffer
+     */
     private void parsing(String link) throws IOException {
         // Inizializzo i buffer
         BufferedReader br = null;   // buffer per il parsing
         try {
-
             URLConnection urlConnection = new URL(link).openConnection();   // apro la connessione all'URL
             urlConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0"); // aggiungo alla connessione l'user-agent dato che il protocollo è httpS
             br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())); // apro il buffer di lettura del json ottenuto dall'URL
@@ -115,6 +128,11 @@ public class StrAlbService {
         }
     }
 
+    /**
+     * Metodo che esegue il salvataggio tramite seriale java in cache locale della lista di oggetti parsati
+     *
+     * @param fileName nome del file cache da creare
+     */
     private void salvaSeriale(String fileName) {
         // salvataggio tramite Serial della lista su file per evitare di fare ogni volta il parsing
         // buffer per il salvataggio tramite seriale della lista creata
@@ -125,6 +143,11 @@ public class StrAlbService {
         }
     }
 
+    /**
+     * Metodo che esegue il caricamento tramite seriale java in cache locale della lista di oggetti parsati da una sessione precedente
+     *
+     * @param fileName nome del file cache da leggere
+     */
     private void caricaSeriale(String fileName) {
         // buffer per il caricamento tramite seriale della lista creata
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
@@ -139,24 +162,50 @@ public class StrAlbService {
         }
     }
 
-    //metodo per retituire la lista con tutti i dati
+    /**
+     * Restituisce l'intero dataset
+     *
+     * @return la lista completa degli oggetti
+     */
     public List getAllData() {
         return strutture;
     }
 
-    public StrutturaAlberghiera getStrAlb(int i) {//restituiamo la i-esima struttura
-        if (i < strutture.size()) return strutture.get(i);
-        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id: '" + i + "' does not exist");
+    /**
+     * Restituisce l'oggetto corrispondente all'id passato
+     *
+     * @param id id-indice dell'oggetto richiesto
+     * @return l'oggetto corrispondente al valore di id ricevuto
+     */
+    public StrutturaAlberghiera getStrAlb(int id) {//restituiamo la i-esima struttura
+        if (id < strutture.size()) return strutture.get(id);
+        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id: '" + id + "' does not exist");
     }
 
+    /**
+     * Restituisce la lista dei metadati
+     *
+     * @return lista dei metadati
+     */
     public List getMetadata() {
         return metadata;
     }
 
+    /**
+     * Restituisce le statistiche relative ad un certo campo
+     *
+     * @param fieldName nome del campo
+     * @return Map contenente le statistiche
+     */
     public Map getStats(String fieldName) {
         return Stats.getAllStats(fieldName, getFieldValues(fieldName));
     }
 
+    /**
+     * Restituisce le statistiche relative a tutti i campi
+     *
+     * @return lista di mappe contenenti le statistiche relative ad ogni campo
+     */
     public List<Map> getStats() {
         Field[] fields = StrutturaAlberghiera.class.getDeclaredFields();// questo ci da l'elenco di tutti gli attributi della classe
         List<Map> list = new ArrayList<>();
@@ -167,6 +216,12 @@ public class StrAlbService {
         return list;
     }
 
+    /**
+     * Metodo che estrae dalla lista di oggetti la lista dei valori relativi ad un singolo campo
+     *
+     * @param fieldName campo del quale estrarre i valori
+     * @return lista dei valori del campo richiesto
+     */
     private List getFieldValues(String fieldName) {
         List<Object> values = new ArrayList<>();
         try {
@@ -185,6 +240,14 @@ public class StrAlbService {
         return values;
     }
 
+    /**
+     * Restituisce la lista di oggetti che soddisfano il filtro
+     *
+     * @param fieldName campo da filtrare
+     * @param operator  operatore di confronto
+     * @param ref       valore di riferimento
+     * @return lista di oggetti che soddisfano il filtro
+     */
     public List<StrutturaAlberghiera> getFilteredData(String fieldName, String operator, Object ref) {
         List<Integer> indexes = Filter.select(getFieldValues(fieldName), operator, ref);
         List<StrutturaAlberghiera> out = new ArrayList<>();
@@ -194,6 +257,15 @@ public class StrAlbService {
         return out;
     }
 
+    /**
+     * Restituisce le statistiche relative ad un campo considerando solo i valori di oggetti che soddisfano il filtro
+     *
+     * @param fieldToStats  campo del quale si richiedono le statistiche
+     * @param fieldToFilter campo sul quale si richiede il filtraggio
+     * @param operator      operatore di confronto
+     * @param ref           valore di riferimento
+     * @return Mappa contenente le statistiche relative al campo passato come primo parametro
+     */
     public Map getFilteredStats(String fieldToStats, String fieldToFilter, String operator, Object ref) {
         List<Integer> indexes = Filter.select(getFieldValues(fieldToFilter), operator, ref);
         List allValues = getFieldValues(fieldToStats);
@@ -204,6 +276,14 @@ public class StrAlbService {
         return Stats.getAllStats(fieldToStats, filteredValues);
     }
 
+    /**
+     * Restituisce le statistiche relative a tutti i campi considerando solo i valori di oggetti che soddisfano il filtro
+     *
+     * @param fieldToFilter campo sul quale si richiede il filtraggio
+     * @param operator      operatore di confronto
+     * @param ref           valore di riferimento
+     * @return lista delle mappe contenenti le statistiche di ogni campo
+     */
     public List<Map> getFilteredStats(String fieldToFilter, String operator, Object ref) {
         Field[] fields = StrutturaAlberghiera.class.getDeclaredFields();// questo ci da l'elenco di tutti gli attributi della classe
         List<Map> list = new ArrayList<>();
