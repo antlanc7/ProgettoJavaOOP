@@ -6,8 +6,8 @@ import java.util.Map;
 
 
 /**
- * Classe che contiene i metodi per il calcolo dei valori statistici
- * Astratta poiché contiene solo metodi statici, pertnato non è necessario istanziarla per utilizzarla
+ * Classe che contiene i metodi per il calcolo dei valori statistici.<br>
+ * Astratta poiché contiene solo metodi statici, pertanto non è necessario istanziarla per utilizzarla.
  */
 public abstract class Stats {
 
