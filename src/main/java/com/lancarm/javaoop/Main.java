@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Classe main che avvia il server Spring
  */
 @SpringBootApplication
-public class ProgettoJavaOopApplication {
+public class Main {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProgettoJavaOopApplication.class, args);
+        SpringApplication.run(Main.class, args);
     }
 
 }
