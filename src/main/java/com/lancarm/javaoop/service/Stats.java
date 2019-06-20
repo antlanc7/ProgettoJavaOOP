@@ -18,8 +18,8 @@ public abstract class Stats {
      * @return  numero arrotondato a n cifre decimali
      */
     public static double round(double x, int n) {
-        double factor = Math.pow(10, n);
-        return Math.round(x * factor) / factor;
+        double factor = Math.pow(10, n);    //calcola il fattore moltiplicativo per spostare la virgola di n posti
+        return Math.round(x * factor) / factor;     //arrotonda ad intero il numero con la virgola spostata, dopodiché la rimette a posto dividendo
     }
 
     /**
@@ -28,7 +28,7 @@ public abstract class Stats {
      * @return  dimensione della lista
      */
     public static int count(List list) {
-        return list.size();
+        return list.size();     //basta usare il metodo size() delle liste
     }
 
     /**
@@ -39,7 +39,7 @@ public abstract class Stats {
     public static double sum(List<Number> list) {
         double s = 0;
         for (Number n : list) {
-            s += n.doubleValue();
+            s += n.doubleValue();       //sommo tutti i numeri n della lista nella variabile s
         }
         return s;
     }
@@ -50,7 +50,7 @@ public abstract class Stats {
      * @return media degli elementi
      */
     public static double avg(List<Number> list) {
-        return round(sum(list) / count(list), 2);
+        return round(sum(list) / count(list), 2);       // media = somma / dimensione
     }
 
     /**
@@ -59,7 +59,7 @@ public abstract class Stats {
      * @return valore massimo della lista
      */
     public static double max(List<Number> list) {
-        double max = list.get(0).doubleValue();
+        double max = list.get(0).doubleValue();     //classico algoritmo di ricerca max
         for (Number n : list) {
             double nval = n.doubleValue();
             if (nval > max) max = nval;
@@ -72,7 +72,7 @@ public abstract class Stats {
      * @param list lista di numeri dai quali trovare il minimo
      * @return valore minimo della lista
      */
-    public static double min(List<Number> list) {
+    public static double min(List<Number> list) {       //analogo a sopra
         double min = list.get(0).doubleValue();
         for (Number n : list) {
             double nval = n.doubleValue();
@@ -86,7 +86,7 @@ public abstract class Stats {
      * @param list lista di numeri dei quali calcolare la dev. std.
      * @return deviazione standard dei valori della lista
      */
-    public static double std(List<Number> list) {
+    public static double std(List<Number> list) {   //devstd = radice della sommatoria degli (xi-xmedio)^2
         double avg = avg(list);
         double var = 0;
         for (Number n : list) {
@@ -103,10 +103,10 @@ public abstract class Stats {
     public static Map<Object, Integer> uniqueElements(List list) {
         Map<Object, Integer> map = new HashMap<>();
         for (Object elem : list) {
-            if (map.containsKey(elem)) {
-                map.replace(elem, map.get(elem) + 1);
+            if (map.containsKey(elem)) {        //se la mappa contiene già la chiave (elemento già trovato precedentemente)
+                map.replace(elem, map.get(elem) + 1);   //incrementa il valore, ovvero il contatore, di uno
             } else {
-                map.put(elem, 1);
+                map.put(elem, 1);       // altrimenti inserisce nella mappa la nuova chiave trovata con contatore inizializzato a uno
             }
         }
         return map;
@@ -122,7 +122,7 @@ public abstract class Stats {
         Map<String, Object> map = new HashMap<>();
         map.put("field", fieldName);
         if (!list.isEmpty()) {
-            if (list.get(0) instanceof Number) {
+            if (list.get(0) instanceof Number) {        // calcola le statistiche numeriche
                 map.put("avg", avg(list));
                 map.put("min", min(list));
                 map.put("max", max(list));
@@ -130,7 +130,7 @@ public abstract class Stats {
                 map.put("sum", sum(list));
                 map.put("count", count(list));
                 return map;
-            } else {
+            } else {        // calcola le statistiche non numeriche
                 map.put("uniqueElements", uniqueElements(list));
                 map.put("count", count(list));
             }
