@@ -27,8 +27,6 @@ public class StrutturaAlberghiera implements Serializable {  //Serializable serv
         this.camere = camere;
     }
 
-    public StrutturaAlberghiera() {}
-
     public String getInsegna() {
         return insegna;
     }

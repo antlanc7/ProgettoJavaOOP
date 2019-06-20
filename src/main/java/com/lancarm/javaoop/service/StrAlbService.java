@@ -146,7 +146,7 @@ public class StrAlbService {
 
     public StrutturaAlberghiera getStrAlb(int i) {//restituiamo la i-esima struttura
         if (i < strutture.size()) return strutture.get(i);
-        else return new StrutturaAlberghiera();
+        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Id: '"+i+"' does not exist");
     }
 
     public List getMetadata() {
@@ -167,7 +167,7 @@ public class StrAlbService {
         return list;
     }
 
-    public List getFieldValues(String fieldName) {
+    private List getFieldValues(String fieldName) {
         List<Object> values = new ArrayList<>();
         try {
             //serve per scorrere tutte le strutture ed estrarre i valori del campo fieldName
@@ -197,7 +197,7 @@ public class StrAlbService {
     public Map getFilteredStats(String fieldToStats, String fieldToFilter, String operator, Object ref) {
         List<Integer> indexes = Filter.select(getFieldValues(fieldToFilter), operator, ref);
         List allValues = getFieldValues(fieldToStats);
-        List filteredValues = new ArrayList();
+        List<Object> filteredValues = new ArrayList<>();
         for (int i : indexes) {
             filteredValues.add(allValues.get(i));
         }
