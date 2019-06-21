@@ -96,8 +96,13 @@ Di seguito i diagrammi UML dei casi d'uso, delle classi e delle sequenze che mos
 ![Class Diagram](readme_resources/class.png)
 
 ### Diagrammi delle sequenze
+#### GET metadata
 ![Use Case Diagram](readme_resources/getMetadata.png)
+#### GET data
 ![Use Case Diagram](readme_resources/getData.png)
+#### POST data
 ![Use Case Diagram](readme_resources/postData.png)
+#### GET stats
 ![Use Case Diagram](readme_resources/getStats.png)
+#### POST stats
 ![Use Case Diagram](readme_resources/postStats.png)
